@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+
 public class Master {
   public static void main(String[] args) {
     Player player1 = PlayerFactory.getPlayer(PlayerType.HUMAN);
@@ -15,9 +17,17 @@ public class Master {
       int p1 = player1.act(board);
       board.act(p1, Board.PLAYER_ONE);
       System.out.println("Player 1's move: " + p1);
+      Platform.runLater(() -> {
+        View.refresh(p1, Board.PLAYER_ONE);
+      });
+      if (Rules.whoWon(board) != 0)
+        break;
       int p2 = player2.act(board);
       board.act(p2, Board.PLAYER_TWO);
       System.out.println("Player 2's move: " + p2);
+      Platform.runLater(() -> {
+        View.refresh(p2, Board.PLAYER_TWO);
+      });
     }
 
     System.out.println("Winner is player " + Rules.whoWon(board));

@@ -10,9 +10,10 @@ import javafx.scene.paint.Color;
  
 public class View extends Application {
     private GridPane grid = new GridPane();
-    private Circle[][] circles;
+    private static Circle[][] circles;
     private static Board board;
-    public static int x,y;
+    public static int x = -1;
+    public static int y = -1;
 
     public static void main(String[] args) {
         launch(args);
@@ -27,14 +28,6 @@ public class View extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Connect Four");    
         x = y = -1;   
-        Board board = new Board(7,6);
-        board.board[0][0]=Board.PLAYER_ONE;
-        board.board[0][1]=Board.PLAYER_ONE;
-        board.board[0][2]=Board.PLAYER_ONE;
-        board.board[0][3]=Board.PLAYER_ONE;
-        board.board[1][0]=Board.PLAYER_TWO;
-        board.board[2][0]=Board.PLAYER_TWO;
-        board.board[3][0]=Board.PLAYER_TWO;
         circles = new Circle[board.board.length][board.board[0].length];
 
         for(int i = 0; i < board.board.length; i++) {
@@ -65,7 +58,6 @@ public class View extends Application {
                 final int finalX = i;
                 final int finalY = j;
                 circle.setOnMouseClicked((event) -> {
-                    circle.setFill(Color.ORANGE);
                     update(finalX,finalY);
                 });
                 grid.add(circle,i,board.board[0].length-j-1);
@@ -82,4 +74,14 @@ public class View extends Application {
         this.y = y;
     }
 
+    public static void refresh(int column, int player) {
+      for (int i = 0; i < circles[column].length; i++) {
+        Circle circle = circles[column][i];
+        int[] line = board.board[column];
+        if (line[i] == Board.PLAYER_ONE)
+          circle.setFill(Color.RED);
+        else if (line[i] == Board.PLAYER_TWO) 
+          circle.setFill(Color.GREEN);
+      }
+    }
 }
