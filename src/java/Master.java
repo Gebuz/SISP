@@ -4,9 +4,14 @@ public class Master {
     Player player2 = PlayerFactory.getPlayer(PlayerType.HUMAN);
 
     Board board = new Board();
+    View.hue(board);
     while (Rules.whoWon(board) == 0) {
-      board.act(player1.act(board), Board.PLAYER_ONE);
-      board.act(player2.act(board), Board.PLAYER_TWO);
+      int p1 = player1.act(board);
+      board.act(p1, Board.PLAYER_ONE);
+      System.out.println("Player 1's move: " + p1);
+      int p2 = player2.act(board);
+      board.act(p2, Board.PLAYER_TWO);
+      System.out.println("Player 2's move: " + p2);
     }
 
     System.out.println("Winner is player " + Rules.whoWon(board));

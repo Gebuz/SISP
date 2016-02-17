@@ -11,10 +11,16 @@ import javafx.scene.paint.Color;
 public class View extends Application {
     private GridPane grid = new GridPane();
     private Circle[][] circles;
+    private static Board board;
     public static int x,y;
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void hue(Board boarde) {
+        board = boarde;
+        launch();
     }
     
     @Override
