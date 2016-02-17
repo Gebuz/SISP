@@ -5,8 +5,8 @@ public class Master {
 
     Board board = new Board();
     while (Rules.whoWon(board) == 0) {
-      board.act(player1.act(board), 1);
-      board.act(player2.act(board), 2);
+      board.act(player1.act(board), Board.PLAYER_ONE);
+      board.act(player2.act(board), Board.PLAYER_TWO);
     }
 
     System.out.println("Winner is player " + Rules.whoWon(board));
