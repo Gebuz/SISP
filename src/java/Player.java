@@ -1,3 +1,3 @@
 public interface Player {
-  public int act();
+  public int act(Board board);
 }
