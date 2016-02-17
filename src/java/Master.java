@@ -1,7 +1,7 @@
 public class Master {
   public static void main(String[] args) {
-    Player player1 = PlayerFactory.getPlayer(PlayerType.RANDOM);
-    Player player2 = PlayerFactory.getPlayer(PlayerType.RANDOM);
+    Player player1 = PlayerFactory.getPlayer(PlayerType.HUMAN);
+    Player player2 = PlayerFactory.getPlayer(PlayerType.HUMAN);
 
     Board board = new Board();
     while (Rules.whoWon(board) == 0) {

@@ -5,6 +5,8 @@ public class PlayerFactory {
     switch (type) {
       case RANDOM:
         return new RandomPlayer();
+      case HUMAN:
+        return new HumanPlayer();
       default:
         break;
     }

@@ -4,6 +4,9 @@ public class HumanPlayer implements Player {
 
   @Override
   public int act(Board board) {
-    return 0;
+    while (View.x == -1);
+    int column = View.x;
+    View.x = -1;
+    return column;
   }
 }

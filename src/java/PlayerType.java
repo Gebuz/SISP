@@ -1,3 +1,3 @@
 public enum PlayerType {
-  RANDOM
+  RANDOM, HUMAN
 }
