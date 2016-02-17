@@ -12,6 +12,6 @@ public class RandomPlayer implements Player {
   @Override
   public int act(Board board) {
     List<Integer> actions = Rules.getActions(board);
-    return random.nextInt(actions.size());
+    return actions.get(random.nextInt(actions.size()));
   }
 }
