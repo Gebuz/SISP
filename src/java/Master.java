@@ -3,8 +3,14 @@ public class Master {
     Player player1 = PlayerFactory.getPlayer(PlayerType.HUMAN);
     Player player2 = PlayerFactory.getPlayer(PlayerType.HUMAN);
 
-    Board board = new Board();
-    View.hue(board);
+    final Board board = new Board();
+
+    Thread t = new Thread() {
+      public void run() {
+        View.hue(board);
+      }
+    };
+    t.start();
     while (Rules.whoWon(board) == 0) {
       int p1 = player1.act(board);
       board.act(p1, Board.PLAYER_ONE);
