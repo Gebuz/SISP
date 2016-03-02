@@ -4,6 +4,7 @@ public class GameLogic implements IGameLogic {
     private int y = 0;
     private int playerID;
     private int[][] board;
+    private int count = 0;
     
     public GameLogic() {
         //TODO Write your implementation for this method
@@ -27,52 +28,57 @@ public class GameLogic implements IGameLogic {
     public Winner gameFinished() {
         //TODO Write your implementation for this method
         //columns
-        for (int column = 0; column < x; column++) {
-          int lastPlayer = -1;
-          int count = 0;
-          System.out.println("");
-          for (int row = 0; row < y; row++) {
-            System.out.println(column + ":" + row + " -> " + board[column][row]);
-            System.out.println("lastPlayer = " + lastPlayer);
-            System.out.println("Count = " + count);
-            if (board[column][row] != lastPlayer && lastPlayer > 0 && board[column][row] > 0) {
-              lastPlayer = board[column][row];
-              count = 1;
-            } else if (board[column][row] == lastPlayer) {
-              if (count == 3) {
-                return getRealWinner(lastPlayer);
-              } else {
-                count++;
-              }
-            } else if (board[column][row] > 0) {
-              lastPlayer = board[column][row];
-              count = 1;
-            } else {
-              lastPlayer = -1;
-              count = 0;
+        for(int c = 0; c < x; c++){
+            for(int r = 0; r < y; r++){
+                int player = board[c][r];
+                if(player == 0){
+                break;
+                }
+                //check vertical
+                if(r+2<y){
+                    for(int a = 0; a<4; a++){
+                        if(player != board[c][r+a]){
+                            break;
+                        }
+                        else if(a == 3){
+                            return getRealWinner(player);
+                        }
+                    }
+                }
+                //check horizontal
+                if(c+2<x){
+                    for(int a = 0; a<4; a++){
+                        if(player != board[c+a][r]){
+                            break;
+                        }
+                        else if(a == 3){
+                            return getRealWinner(player);
+                        }
+                    }
+                }
+                //check diagonalup
+                if(r+2<y && c+2<x){
+                    for(int a = 0; 0<4; a++){
+                        if(player != board[c+a][r+a]){
+                            break;
+                        }
+                        else if(a == 3){
+                            return getRealWinner(player);
+                        }
+                    }
+                }
+                //check diagonaldown
+                if(r-2>0 && c+2<x){
+                    for(int a = 0; 0<4; a++){
+                        if(player != board[c+a][r-a]){
+                            break;
+                        }
+                        else if(a == 3){
+                            return getRealWinner(player);
+                        }
+                    }
+                }
             }
-          }
-        }
-
-        for (int row = 0; row < y; row++) {
-          for (int column = 0; column < x; column++) {
-            int lastPlayer = -1;
-            int count = 0;
-            if (board[column][row] != lastPlayer) {
-              lastPlayer = board[column][row];
-              count = 1;
-            }
-            else if (board[column][row] == lastPlayer) {
-              if (count == 3) {
-                return getRealWinner(lastPlayer);
-              } else {
-                count++;
-              }
-            } else {
-              lastPlayer = -1;
-              count = 0;
-            }
-          }
         }
         return Winner.NOT_FINISHED;
     }
@@ -91,7 +97,7 @@ public class GameLogic implements IGameLogic {
 
     public int decideNextMove() {
         //TODO Write your implementation for this method
-        return 0;
+        return count++%x;
     }
 
 }
