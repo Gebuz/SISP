@@ -64,7 +64,7 @@ public class AlphaBetaLogic implements IGameLogic {
     int bestAction = -1;
     double bestValue = -Double.MAX_VALUE;
     for (int action : actions(state)) {
-      double res = min(act(BasicLogic.copyOf(state), action, playerID), -Double.MAX_VALUE, -Double.MAX_VALUE, 1);
+      double res = min(act(BasicLogic.copyOf(state), action, playerID), -Double.MAX_VALUE, Double.MAX_VALUE, 1);
       System.out.println(bestValue);
       if (res > bestValue) {
         bestValue = res;
