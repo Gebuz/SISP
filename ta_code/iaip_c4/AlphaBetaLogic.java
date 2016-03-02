@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class GameLogic implements IGameLogic {
+public class AlphaBetaLogic implements IGameLogic {
   private int x = 0;
   private int y = 0;
   private int playerID;
@@ -9,7 +9,7 @@ public class GameLogic implements IGameLogic {
   private int count = 0;
   private int cutoff = 9;
 
-  public GameLogic() {
+  public AlphaBetaLogic() {
     //TODO Write your implementation for this method
   }
 
@@ -64,7 +64,7 @@ public class GameLogic implements IGameLogic {
     int bestAction = -1;
     double bestValue = -Double.MAX_VALUE;
     for (int action : actions(state)) {
-      double res = min(act(BasicLogic.copyOf(state), action, playerID), 1);
+      double res = min(act(BasicLogic.copyOf(state), action, playerID), -Double.MAX_VALUE, -Double.MAX_VALUE, 1);
       System.out.println(bestValue);
       if (res > bestValue) {
         bestValue = res;
@@ -75,29 +75,37 @@ public class GameLogic implements IGameLogic {
     return bestAction;
   }
 
-  private double max(int[][] state, int depth) {
+  private double max(int[][] state, double alpha, double beta, int depth) {
     if (terminal(state) || depth == cutoff)
       return utility(state);
     else {
       double best = -Double.MAX_VALUE;
       for (int action : actions(state)) {
-        double res = min(act(BasicLogic.copyOf(state), action, playerID), depth+1);
+        double res = min(act(BasicLogic.copyOf(state), action, playerID), alpha, beta, depth+1);
+        if (res >= beta)
+          return res;
         if (res > best)
           best = res;
+        if (res > alpha)
+          alpha = res;
       }
       return best;
     }
   }
 
-  private double min(int[][] state, int depth) {
+  private double min(int[][] state, double alpha, double beta, int depth) {
     if (terminal(state) || depth == cutoff)
       return utility(state);
     else {
       double best = Double.MAX_VALUE;
       for (int action : actions(state)) {
-        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1), depth+1);
+        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1), alpha, beta, depth+1);
+        if (res <= alpha)
+          return res;
         if (res < best)
           best = res;
+        if (res < beta)
+          beta = res;
       }
       return best;
     }
