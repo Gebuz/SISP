@@ -20,79 +20,9 @@ public class GameLogic implements IGameLogic {
     //TODO Write your implementation for this method
   }
 
-  private Winner getRealWinner(int id) {
-    if (id == 1)
-      return Winner.PLAYER1;
-    else
-      return Winner.PLAYER2;
-  }
-
-  private Winner gameStatus(int[][] board) {
-    //TODO Write your implementation for this method
-    //columns
-    for(int c = 0; c < x; c++){
-      for(int r = 0; r < y; r++){
-        int player = board[c][r];
-        if(player == 0){
-          break;
-        }
-        //check vertical
-        if(r+2<y){
-          for(int a = 0; a<4; a++){
-            if(player != board[c][r+a]){
-              break;
-            }
-            else if(a == 3){
-              return getRealWinner(player);
-            }
-          }
-        }
-        //check horizontal
-        if(c+2<x){
-          for(int a = 0; a<4; a++){
-            if(player != board[c+a][r]){
-              break;
-            }
-            else if(a == 3){
-              return getRealWinner(player);
-            }
-          }
-        }
-        //check diagonalup
-        if(r+2<y && c+2<x){
-          for(int a = 0; 0<4; a++){
-            if(player != board[c+a][r+a]){
-              break;
-            }
-            else if(a == 3){
-              return getRealWinner(player);
-            }
-          }
-        }
-        //check diagonaldown
-        if(r-2>0 && c+2<x){
-          for(int a = 0; 0<4; a++){
-            if(player != board[c+a][r-a]){
-              break;
-            }
-            else if(a == 3){
-              return getRealWinner(player);
-            }
-          }
-        }
-      }
-    }
-    for (int column = 0; column < x; column++) {
-      if (board[column][y-1] == 0)
-        return Winner.NOT_FINISHED;
-    }
-
-    return Winner.TIE;
-  }
-
   public Winner gameFinished() {
     //TODO Write your implementation for this method
-    return gameStatus(board);
+    return BasicLogic.gameStatus(board);
   }
 
   public void insertCoin(int column, int playerID) {
@@ -111,17 +41,10 @@ public class GameLogic implements IGameLogic {
     return state;
   }
 
-  private int[][] copyOf(int[][] state) {
-    int[][] copy = new int[state.length][state[0].length];
-    for (int column = 0; column < x; column++)
-      for (int row = 0; row < y; row++)
-        copy[column][row] = state[column][row];
-    return copy;
-  }
-
   public int decideNextMove() {
     //TODO Write your implementation for this method
-    return count++%x;
+    //return count++%x;
+    return minMax(board);
   }
 
   private List<Integer> actions(int[][] state) {
@@ -134,7 +57,17 @@ public class GameLogic implements IGameLogic {
   }
 
 
-  private void minMix() {
+  private int minMax(int[][] state) {
+    int bestAction = -1;
+    double bestValue = Double.MIN_VALUE;
+    for (int action : actions(state)) {
+      double res = min(act(BasicLogic.copyOf(state), action, playerID));
+      if (res > bestValue) {
+        bestValue = res;
+        bestAction = action;
+      }
+    }
+    return bestAction;
   }
 
   private double max(int[][] state) {
@@ -143,7 +76,7 @@ public class GameLogic implements IGameLogic {
     else {
       double best = Double.MIN_VALUE;
       for (int action : actions(state)) {
-        double res = min(act(copyOf(state), action, playerID));
+        double res = min(act(BasicLogic.copyOf(state), action, playerID));
         if (res > best)
           best = res;
       }
@@ -157,7 +90,7 @@ public class GameLogic implements IGameLogic {
     else {
       double best = Double.MAX_VALUE;
       for (int action : actions(state)) {
-        double res = max(act(copyOf(state), action, playerID == 1 ? 2 : 1));
+        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1));
         if (res < best)
           best = res;
       }
@@ -166,11 +99,18 @@ public class GameLogic implements IGameLogic {
   }
 
   private boolean terminal(int[][] state) {
-    return gameStatus(state) != Winner.NOT_FINISHED;
+    return BasicLogic.gameStatus(state) != Winner.NOT_FINISHED;
   }
 
   private double utility(int[][] state) {
-    return 0.0;
+    Winner winner = BasicLogic.gameStatus(state);
+    Winner me = BasicLogic.getRealWinner(playerID);
+    if (winner == me)
+      return 1.0;
+    else if (winner == Winner.TIE)
+      return 0.0;
+    else
+      return -1.0;
   }
 
 }
