@@ -18,8 +18,8 @@ public class BasicLogic {
           break;
         }
         //check vertical
-        if(r+2<board[0].length){
-          for(int a = 0; a<4; a++){
+        if(r+3<board[0].length){
+          for(int a = 1; a<4; a++){
             if(player != board[c][r+a]){
               break;
             }
@@ -29,8 +29,8 @@ public class BasicLogic {
           }
         }
         //check horizontal
-        if(c+2<board.length){
-          for(int a = 0; a<4; a++){
+        if(c+3<board.length){
+          for(int a = 1; a<4; a++){
             if(player != board[c+a][r]){
               break;
             }
@@ -40,8 +40,8 @@ public class BasicLogic {
           }
         }
         //check diagonalup
-        if(r+2<board[0].length && c+2<board.length){
-          for(int a = 0; 0<4; a++){
+        if(r+3<board[0].length && c+3<board.length){
+          for(int a = 1; a<4; a++){
             if(player != board[c+a][r+a]){
               break;
             }
@@ -51,8 +51,8 @@ public class BasicLogic {
           }
         }
         //check diagonaldown
-        if(r-2>0 && c+2<board.length){
-          for(int a = 0; 0<4; a++){
+        if(r-3>0 && c+3<board.length){
+          for(int a = 1; a<4; a++){
             if(player != board[c+a][r-a]){
               break;
             }

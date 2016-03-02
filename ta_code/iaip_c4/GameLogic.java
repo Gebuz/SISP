@@ -7,6 +7,7 @@ public class GameLogic implements IGameLogic {
   private int playerID;
   private int[][] board;
   private int count = 0;
+  private int cutoff = 7;
 
   public GameLogic() {
     //TODO Write your implementation for this method
@@ -61,7 +62,7 @@ public class GameLogic implements IGameLogic {
     int bestAction = -1;
     double bestValue = Double.MIN_VALUE;
     for (int action : actions(state)) {
-      double res = min(act(BasicLogic.copyOf(state), action, playerID));
+      double res = min(act(BasicLogic.copyOf(state), action, playerID), 1);
       if (res > bestValue) {
         bestValue = res;
         bestAction = action;
@@ -70,13 +71,13 @@ public class GameLogic implements IGameLogic {
     return bestAction;
   }
 
-  private double max(int[][] state) {
-    if (terminal(state))
+  private double max(int[][] state, int depth) {
+    if (terminal(state) || depth == cutoff)
       return utility(state);
     else {
       double best = Double.MIN_VALUE;
       for (int action : actions(state)) {
-        double res = min(act(BasicLogic.copyOf(state), action, playerID));
+        double res = min(act(BasicLogic.copyOf(state), action, playerID), depth+1);
         if (res > best)
           best = res;
       }
@@ -84,13 +85,13 @@ public class GameLogic implements IGameLogic {
     }
   }
 
-  private double min(int[][] state) {
-    if (terminal(state))
+  private double min(int[][] state, int depth) {
+    if (terminal(state) || depth == cutoff)
       return utility(state);
     else {
       double best = Double.MAX_VALUE;
       for (int action : actions(state)) {
-        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1));
+        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1), depth+1);
         if (res < best)
           best = res;
       }
@@ -103,14 +104,7 @@ public class GameLogic implements IGameLogic {
   }
 
   private double utility(int[][] state) {
-    Winner winner = BasicLogic.gameStatus(state);
-    Winner me = BasicLogic.getRealWinner(playerID);
-    if (winner == me)
-      return 1.0;
-    else if (winner == Winner.TIE)
-      return 0.0;
-    else
-      return -1.0;
+    return Heuristic.GetHeuristic(state, playerID);
   }
 
 }
