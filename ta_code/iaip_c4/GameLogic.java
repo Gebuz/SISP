@@ -54,20 +54,24 @@ public class GameLogic implements IGameLogic {
       if (board[i][y-1] == 0)
         actions.add(i);
     }
+    if (actions.size() == 0)
+      System.out.println("No action!");
     return actions;
   }
 
 
   private int minMax(int[][] state) {
     int bestAction = -1;
-    double bestValue = Double.MIN_VALUE;
+    double bestValue = -Double.MAX_VALUE;
     for (int action : actions(state)) {
       double res = min(act(BasicLogic.copyOf(state), action, playerID), 1);
+      System.out.println(bestValue);
       if (res > bestValue) {
         bestValue = res;
         bestAction = action;
       }
     }
+    System.out.println("My move = " + bestAction);
     return bestAction;
   }
 
@@ -75,7 +79,7 @@ public class GameLogic implements IGameLogic {
     if (terminal(state) || depth == cutoff)
       return utility(state);
     else {
-      double best = Double.MIN_VALUE;
+      double best = -Double.MAX_VALUE;
       for (int action : actions(state)) {
         double res = min(act(BasicLogic.copyOf(state), action, playerID), depth+1);
         if (res > best)
@@ -104,6 +108,16 @@ public class GameLogic implements IGameLogic {
   }
 
   private double utility(int[][] state) {
+    if (terminal(state)) {
+      Winner winner = BasicLogic.gameStatus(state);
+      Winner me = BasicLogic.getRealWinner(playerID);
+      if (winner == me)
+        return 1000.0;
+      else if (winner == Winner.TIE)
+        return 0.0;
+      else
+        return -1000.0;
+    }
     return Heuristic.GetHeuristic(state, playerID);
   }
 
