@@ -80,9 +80,13 @@ public class GameLogic implements IGameLogic {
                 }
             }
         }
-        return Winner.NOT_FINISHED;
-    }
+        for (int column = 0; column < x; column++) {
+          if (board[column][y-1] == 0)
+            return Winner.NOT_FINISHED;
+        }
 
+        return Winner.TIE;
+    }
 
     public void insertCoin(int column, int playerID) {
         //TODO Write your implementation for this method	
