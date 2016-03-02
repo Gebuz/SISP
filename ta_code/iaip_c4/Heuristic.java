@@ -21,16 +21,24 @@ public final class Heuristic{
 					double tcount = 0;
 					for(int a = 0; a<4; a++){
 						int currentp = board[c][r+a];
-						if(currentp == player && startp == player){
+						if(startp == player && currentp == player){
 							tcount+=1;
-						} else if(currentp == 0 && startp == player){
+						} else if(startp == player && currentp == 0){
 							tcount+=0.1;
-						} else if(currentp == 0 && startp == opponent(player)){
-							tcount-=0.1;
-						} else if(currentp == opponent(player) && startp == opponent(player)){
+						} else if(startp == opponent(player) && currentp == 0){
+							tcount+=0.1;
+						} else if(startp == opponent(player) && currentp == opponent(player)){
 							tcount-=1;
-						}
-						else{
+						} else if(startp == 0 && currentp == player){
+							tcount+=1;
+							startp = currentp;
+						} else if(startp == 0 && currentp == opponent(player)){
+							tcount = -tcount;
+							tcount-=1;
+							startp = currentp;
+						} else if(startp == 0 && currentp == 0){
+							tcount+=0.1;
+						} else{
 							tcount = 0;
 							break;
 						}
