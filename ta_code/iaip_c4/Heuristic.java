@@ -17,7 +17,7 @@ public final class Heuristic{
 			for(int r = 0; r < y; r++){
 				int startp = board[c][r];
                 	//check vertical
-				if(r+2<y){
+				if(r+3<y){
 					double tcount = 0;
 					for(int a = 0; a<4; a++){
 						int currentp = board[c][r+a];
@@ -36,7 +36,7 @@ public final class Heuristic{
 					count += tcount;
 				}
 	                //check horizontal
-				if(c+2<x){
+				if(c+3<x){
 					double tcount = 0;
 					for(int a = 0; a<4; a++){
 						int currentp = board[c+a][r];
@@ -55,7 +55,7 @@ public final class Heuristic{
 					count += tcount;
 				}
 	                //check diagonalup
-				if(r+2<y && c+2<x){
+				if(r+3<y && c+3<x){
 					double tcount = 0;
 					for(int a = 0; a<4; a++){
 						int currentp = board[c+a][r+a];
@@ -74,7 +74,7 @@ public final class Heuristic{
 					count += tcount;
 				}
 	                //check diagonaldown
-				if(r-2>0 && c+2<x){
+				if(r-3>0 && c+3<x){
 					double tcount = 0;
 					for(int a = 0; a<4; a++){
 						int currentp = board[c+a][r-a];
