@@ -1,15 +1,15 @@
-public class Heuristic{
-	public Heuristic(){
+public final class Heuristic{
+	private Heuristic(){
 
 	}
 
-	private int opponent(int player){
+	private static int opponent(int player){
 		if(player == 1)
 			return 2;
 		else return 1;
 	}
 
-	public double GetHeuristic(int[][] board, int player){
+	public static double GetHeuristic(int[][] board, int player){
 		int x = board.length;
 		int y = board[0].length;
 		double count = 0;
