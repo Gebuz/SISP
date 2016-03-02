@@ -23,8 +23,8 @@ public final class Heuristic{
 						int currentp = board[c][r+a];
 						if(currentp == player && startp == player){
 							tcount+=1;
-						} else if(currentp == startp){
-
+						} else if(currentp == 0){
+							tcount+=0;
 						} else if(currentp == opponent(player) && startp == opponent(player)){
 							tcount-=1;
 						}
