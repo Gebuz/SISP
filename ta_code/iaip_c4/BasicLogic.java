@@ -11,52 +11,52 @@ public class BasicLogic {
   public static IGameLogic.Winner gameStatus(int[][] board) {
     //TODO Write your implementation for this method
     //columns
-    for(int c = 0; c < board.length; c++){
-      for(int r = 0; r < board[c].length; r++){
+    for(int c = 0; c < board.length; c++) {
+      for(int r = 0; r < board[c].length; r++) {
         int player = board[c][r];
-        if(player == 0){
+        if(player == 0) {
           break;
         }
         //check vertical
-        if(r+3<board[0].length){
-          for(int a = 1; a<4; a++){
-            if(player != board[c][r+a]){
+        if(r+3<board[0].length) {
+          for(int a = 1; a<4; a++) {
+            if(player != board[c][r+a]) {
               break;
             }
-            else if(a == 3){
+            else if(a == 3) {
               return getRealWinner(player);
             }
           }
         }
         //check horizontal
-        if(c+3<board.length){
-          for(int a = 1; a<4; a++){
-            if(player != board[c+a][r]){
+        if(c+3<board.length) {
+          for(int a = 1; a<4; a++) {
+            if(player != board[c+a][r]) {
               break;
             }
-            else if(a == 3){
+            else if(a == 3) {
               return getRealWinner(player);
             }
           }
         }
         //check diagonalup
-        if(r+3<board[0].length && c+3<board.length){
-          for(int a = 1; a<4; a++){
-            if(player != board[c+a][r+a]){
+        if(r+3<board[0].length && c+3<board.length) {
+          for(int a = 1; a<4; a++) {
+            if(player != board[c+a][r+a]) {
               break;
             }
-            else if(a == 3){
+            else if(a == 3) {
               return getRealWinner(player);
             }
           }
         }
         //check diagonaldown
-        if(r-3>0 && c+3<board.length){
-          for(int a = 1; a<4; a++){
-            if(player != board[c+a][r-a]){
+        if(r-3>=0 && c+3<board.length) {
+          for(int a = 1; a<4; a++) {
+            if(player != board[c+a][r-a]) {
               break;
             }
-            else if(a == 3){
+            else if(a == 3) {
               return getRealWinner(player);
             }
           }
