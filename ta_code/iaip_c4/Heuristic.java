@@ -3,6 +3,8 @@ public final class Heuristic{
 
 	}
 
+  private static final double EMPTY_SPACE_VALUE = 0.5;
+
 	private static int opponent(int player) {
 		if(player == 1)
 			return 2;
@@ -24,9 +26,9 @@ public final class Heuristic{
 						if(startp == player && currentp == player) {
 							count+=1;
 						} else if(startp == player && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == 0) {
-							count-=0.1;
+							count-=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == opponent(player)) {
 							count-=1;
 						} else if(startp == 0 && currentp == player) {
@@ -37,7 +39,7 @@ public final class Heuristic{
 							count-=1;
 							startp = currentp;
 						} else if(startp == 0 && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else{
 							count = 0;
 							break;
@@ -55,9 +57,9 @@ public final class Heuristic{
 						if(startp == player && currentp == player) {
 							count+=1;
 						} else if(startp == player && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == 0) {
-							count-=0.1;
+							count-=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == opponent(player)) {
 							count-=1;
 						} else if(startp == 0 && currentp == player) {
@@ -68,7 +70,7 @@ public final class Heuristic{
 							count-=1;
 							startp = currentp;
 						} else if(startp == 0 && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else{
 							count = 0;
 							break;
@@ -86,9 +88,9 @@ public final class Heuristic{
 						if(startp == player && currentp == player) {
 							count+=1;
 						} else if(startp == player && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == 0) {
-							count-=0.1;
+							count-=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == opponent(player)) {
 							count-=1;
 						} else if(startp == 0 && currentp == player) {
@@ -99,7 +101,7 @@ public final class Heuristic{
 							count-=1;
 							startp = currentp;
 						} else if(startp == 0 && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else{
 							count = 0;
 							break;
@@ -117,9 +119,9 @@ public final class Heuristic{
 						if(startp == player && currentp == player) {
 							count+=1;
 						} else if(startp == player && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == 0) {
-							count-=0.1;
+							count-=EMPTY_SPACE_VALUE;
 						} else if(startp == opponent(player) && currentp == opponent(player)) {
 							count-=1;
 						} else if(startp == 0 && currentp == player) {
@@ -130,7 +132,7 @@ public final class Heuristic{
 							count-=1;
 							startp = currentp;
 						} else if(startp == 0 && currentp == 0) {
-							count+=0.1;
+							count+=EMPTY_SPACE_VALUE;
 						} else{
 							count = 0;
 							break;
