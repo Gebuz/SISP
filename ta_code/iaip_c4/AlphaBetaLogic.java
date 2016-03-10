@@ -127,11 +127,11 @@ public class AlphaBetaLogic implements IGameLogic {
       Winner winner = BasicLogic.gameStatus(state);
       Winner me = BasicLogic.getRealWinner(playerID);
       if (winner == me)
-        return 1000.0;
+        return 10000.0;
       else if (winner == Winner.TIE)
         return 0.0;
       else
-        return -1000.0;
+        return -10000.0;
     }
     return Heuristic.GetHeuristic(state, playerID);
   }
