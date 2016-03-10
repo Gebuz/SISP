@@ -21,6 +21,13 @@ public class AlphaBetaLogic implements IGameLogic {
     //TODO Write your implementation for this method
   }
 
+  public void initializeGame(int[][] board, int playerID) {
+    this.board = board;
+    x = board.length;
+    y = board[0].length;
+    this.playerID = playerID;
+  }
+
   public Winner gameFinished() {
     //TODO Write your implementation for this method
     return BasicLogic.gameStatus(board);
