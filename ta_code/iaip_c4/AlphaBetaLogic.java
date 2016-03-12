@@ -79,7 +79,7 @@ public class AlphaBetaLogic implements IGameLogic {
 
   private double max(int[][] state, double alpha, double beta, int depth) {
     if (terminal(state) || depth == cutoff)
-      return utility(state);
+      return utility(state, playerID);
     else {
       double best = -Double.MAX_VALUE;
       for (int action : actions(state)) {
@@ -97,7 +97,7 @@ public class AlphaBetaLogic implements IGameLogic {
 
   private double min(int[][] state, double alpha, double beta, int depth) {
     if (terminal(state) || depth == cutoff)
-      return utility(state);
+      return utility(state, playerID == 1 ? 2 : 1);
     else {
       double best = Double.MAX_VALUE;
       for (int action : actions(state)) {
@@ -117,16 +117,16 @@ public class AlphaBetaLogic implements IGameLogic {
     return BasicLogic.gameStatus(state) != Winner.NOT_FINISHED;
   }
 
-  private double utility(int[][] state) {
+  private double utility(int[][] state, int playerID) {
     if (terminal(state)) {
       Winner winner = BasicLogic.gameStatus(state);
       Winner me = BasicLogic.getRealWinner(playerID);
       if (winner == me)
-        return 10000.0;
+        return 100000.0;
       else if (winner == Winner.TIE)
         return 0.0;
       else
-        return -10000.0;
+        return -100000.0;
     }
     return Heuristic.GetHeuristic(state, playerID);
   }

@@ -9,6 +9,15 @@ public final class Heuristic{
 
   private static final double EMPTY_SPACE_VALUE = 0.5;
 
+  private static boolean trapWillWinEventually(int player, int row) {
+    //because our board is zero indexed, we need to switch odd and even
+    return player == 1 ? !isOdd(row) : isOdd(row);
+  }
+
+  private static boolean isOdd(int row) {
+    return row % 2 == 1;
+  }
+
   private static int opponent(int player) {
     if(player == 1)
       return 2;
@@ -96,14 +105,14 @@ public final class Heuristic{
             System.err.println("Sum after horizontal: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
             if(r-1 >= 0 && board[c+empty][r-1] == 0){
-              if(traps[c+empty][r-1] == 2){
+              if(traps[c+empty][r-1] == opponent(player)){
                 traps[c+empty][r-1] = 3;
               } else{
-                traps[c+empty][r-1] = 1;
+                traps[c+empty][r-1] = player;
               }
             }
           }
-          if (count <= -3-EMPTY_SPACE_VALUE) {
+          else if (count <= -3-EMPTY_SPACE_VALUE) {
             if(r-1 >= 0 && board[c+empty][r-1] == 0){
               if(traps[c+empty][r-1] == 1){
                 traps[c+empty][r-1] = 3;
@@ -151,19 +160,19 @@ public final class Heuristic{
             System.err.println("Sum after diagonal up: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
             if(r+empty-1 >= 0 && board[c+empty][r+empty-1] == 0){
-              if(traps[c+empty][r+empty-1] == 2){
+              if(traps[c+empty][r+empty-1] == opponent(player)){
                 traps[c+empty][r+empty-1] = 3;
               } else{
-                traps[c+empty][r+empty-1] = 1;
+                traps[c+empty][r+empty-1] = player;
               }
             }
           }
-          if (count <= -3-EMPTY_SPACE_VALUE) {
+          else if (count <= -3-EMPTY_SPACE_VALUE) {
             if(r+empty-1 >= 0 && board[c+empty][r+empty-1] == 0){
-              if(traps[c+empty][r+empty-1] == 1){
+              if(traps[c+empty][r+empty-1] == player){
                 traps[c+empty][r+empty-1] = 3;
               } else{
-                traps[c+empty][r+empty-1] = 3;
+                traps[c+empty][r+empty-1] = opponent(player);
               }
             }
           }
@@ -205,20 +214,20 @@ public final class Heuristic{
           if (DEBUG)
             System.err.println("Sum after diagonal down: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
-            if(r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0){
-              if(traps[c+empty][r-empty-1] == 2){
+            if (r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0) {
+              if (traps[c+empty][r-empty-1] == opponent(player)) {
                 traps[c+empty][r-empty-1] = 3;
-              } else{
-                traps[c+empty][r-empty-1] = 1;
+              } else {
+                traps[c+empty][r-empty-1] = player;
               }
             }
           }
-          if (count <= -3-EMPTY_SPACE_VALUE) {
-            if(r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0){
-              if(traps[c+empty][r-empty-1] == 1){
+          else if (count <= -3-EMPTY_SPACE_VALUE) {
+            if (r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0) {
+              if (traps[c+empty][r-empty-1] == player) {
                 traps[c+empty][r-empty-1] = 3;
-              } else{
-                traps[c+empty][r-empty-1] = 2;
+              } else {
+                traps[c+empty][r-empty-1] = opponent(player);
               }
             }
           }
@@ -228,30 +237,30 @@ public final class Heuristic{
     if (DEBUG)
       System.err.println("Sum before traps: " + sum);
     //check traps
-    for(int c = 0; c < x; c++){
+    for (int c = 0; c < x; c++) {
       int countTraps = 0;
-      for(int r = 0; r < y; r++){
-        if(traps[c][r] == 1){
-          if(countTraps == 0){
-            if(traps[c][r+1] == 1){
-              return 1000;
-            }
-            sum += 500;
+      for (int r = 0; r < y; r++) {
+        if (traps[c][r] == player){
+          //if (countTraps == 0){
+            //if (traps[c][r+1] == 1) {
+              //return 1000;
+            //}
+            if (trapWillWinEventually(player, r)) {
+              sum += 1001;
+            } else
+              sum += 500;
             countTraps += 1;
-          } else{
-            sum += 50;
-          }
-        }
-        if(traps[c][r] == 2){
-          if(countTraps == 0){
-            if(traps[c][r+1] == 2){
-              return -1000;
+        } else if (traps[c][r] == opponent(player)) {
+          //if (countTraps == 0){
+            //if (traps[c][r+1] == 2) {
+              //return -1000;
+            //}
+            if (trapWillWinEventually(opponent(player), r)) {
+              sum -= 1001;
+            } else {
+              sum -= 500;
             }
-            sum -= 500;
             countTraps += 1;
-          } else{
-            sum -= 50;
-          }
         }
       }
     }
