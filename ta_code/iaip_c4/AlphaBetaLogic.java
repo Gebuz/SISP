@@ -10,7 +10,6 @@ public class AlphaBetaLogic implements IGameLogic {
   private int cutoff = 9;
 
   public AlphaBetaLogic() {
-    //TODO Write your implementation for this method
   }
 
   public void initializeGame(int x, int y, int playerID) {
@@ -18,7 +17,6 @@ public class AlphaBetaLogic implements IGameLogic {
     this.y = y;
     this.playerID = playerID;
     this.board = new int[x][y];
-    //TODO Write your implementation for this method
   }
 
   public void initializeGame(int[][] board, int playerID) {
@@ -29,12 +27,10 @@ public class AlphaBetaLogic implements IGameLogic {
   }
 
   public Winner gameFinished() {
-    //TODO Write your implementation for this method
     return BasicLogic.gameStatus(board);
   }
 
   public void insertCoin(int column, int playerID) {
-    //TODO Write your implementation for this method	
     act(board, column, playerID);
   }
 
@@ -50,7 +46,6 @@ public class AlphaBetaLogic implements IGameLogic {
   }
 
   public int decideNextMove() {
-    //TODO Write your implementation for this method
     //return count++%x;
     return minMax(board);
   }
