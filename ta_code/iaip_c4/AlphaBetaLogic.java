@@ -47,7 +47,11 @@ public class AlphaBetaLogic implements IGameLogic {
 
   public int decideNextMove() {
     //return count++%x;
-    return minMax(board);
+    for (int column = 0; column < board.length; column++) {
+      if (board[column][0] != 0)
+        return minMax(board);
+    }
+    return 3;
   }
 
   private List<Integer> actions(int[][] state) {
