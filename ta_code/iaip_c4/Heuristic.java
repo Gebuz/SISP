@@ -1,9 +1,14 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class Heuristic{
   private Heuristic() {
 
   }
+
+  public static final ConcurrentHashMap<Integer, Double> preCalculated = new ConcurrentHashMap<>();
 
   private static final boolean DEBUG = false;
 
@@ -16,6 +21,10 @@ public final class Heuristic{
   }
 
   public static double GetHeuristic(int[][] board, int player) {
+    Double res = preCalculated.get(Arrays.deepHashCode(board));
+    if (res != null) {
+      return res;
+    }
     final int opponent = opponent(player);
     if (DEBUG)
       System.err.println("---------------------------------------------");
@@ -277,6 +286,7 @@ public final class Heuristic{
       }
       System.err.println("Player " + player + " -> Sum = " + sum);
     }
+    preCalculated.put(Arrays.deepHashCode(board), sum);
     return sum;
   }
 }

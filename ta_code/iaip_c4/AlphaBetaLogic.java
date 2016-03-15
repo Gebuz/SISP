@@ -91,9 +91,11 @@ public class AlphaBetaLogic implements IGameLogic {
     });
     try {
       runner.get(timeLimitInMs, TimeUnit.MILLISECONDS);
+      Heuristic.preCalculated.clear();
       return bestMove;
     } catch (Exception e) {
       runner.cancel(true);
+      Heuristic.preCalculated.clear();
       return bestMove;
     }
   }
