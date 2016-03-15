@@ -16,6 +16,7 @@ public final class Heuristic{
   }
 
   public static double GetHeuristic(int[][] board, int player) {
+    final int opponent = opponent(player);
     if (DEBUG)
       System.err.println("---------------------------------------------");
     int x = board.length;
@@ -24,8 +25,8 @@ public final class Heuristic{
     int[][] traps = new int[x][y];
     for(int c = 0; c < x; c++) {
       for(int r = 0; r < y; r++) {
-        int startp = board[c][r];
         //check vertical
+        int startp = board[c][r];
         if (r+3<y) {
           double count = 0;
           for(int a = 0; a<4; a++) {
@@ -34,14 +35,14 @@ public final class Heuristic{
               count+=1;
             } else if(startp == player && currentp == 0) {
               count+=EMPTY_SPACE_VALUE;
-            } else if(startp == opponent(player) && currentp == 0) {
+            } else if(startp == opponent && currentp == 0) {
               count-=EMPTY_SPACE_VALUE;
-            } else if(startp == opponent(player) && currentp == opponent(player)) {
+            } else if(startp == opponent && currentp == opponent) {
               count-=1;
             } else if(startp == 0 && currentp == player) {
               count+=1;
               startp = currentp;
-            } else if(startp == 0 && currentp == opponent(player)) {
+            } else if(startp == 0 && currentp == opponent) {
               count = -count;
               count-=1;
               startp = currentp;
@@ -52,13 +53,14 @@ public final class Heuristic{
               break;
             }
           }
-          if (count >= EMPTY_SPACE_VALUE*4 || count <= -EMPTY_SPACE_VALUE*4) {
+          if (count > EMPTY_SPACE_VALUE*4 || count < -EMPTY_SPACE_VALUE*4) {
             sum += count;
           }
         }
         if (DEBUG)
           System.err.println("Sum after vertical: " + sum);
         //check horizontal
+        startp = board[c][r];
         if(c+3<x) {
           double count = 0;
           int empty = -1;
@@ -69,15 +71,15 @@ public final class Heuristic{
             } else if(startp == player && currentp == 0) {
               count+=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == 0) {
+            } else if(startp == opponent && currentp == 0) {
               count-=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == opponent(player)) {
+            } else if(startp == opponent && currentp == opponent) {
               count-=1;
             } else if(startp == 0 && currentp == player) {
               count+=1;
               startp = currentp;
-            } else if(startp == 0 && currentp == opponent(player)) {
+            } else if(startp == 0 && currentp == opponent) {
               count = -count;
               count-=1;
               startp = currentp;
@@ -89,31 +91,32 @@ public final class Heuristic{
               break;
             }
           }
-          if (count >= EMPTY_SPACE_VALUE*4 || count <= -EMPTY_SPACE_VALUE*4) {
+          if (count > EMPTY_SPACE_VALUE*4 || count < -EMPTY_SPACE_VALUE*4) {
             sum += count;
           }
           if (DEBUG)
             System.err.println("Sum after horizontal: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
             if(r-1 >= 0 && board[c+empty][r-1] == 0){
-              if(traps[c+empty][r-1] == 2){
+              if(traps[c+empty][r-1] == opponent){
                 traps[c+empty][r-1] = 3;
               } else{
-                traps[c+empty][r-1] = 1;
+                traps[c+empty][r-1] = player;
               }
             }
           }
           if (count <= -3-EMPTY_SPACE_VALUE) {
             if(r-1 >= 0 && board[c+empty][r-1] == 0){
-              if(traps[c+empty][r-1] == 1){
+              if(traps[c+empty][r-1] == player){
                 traps[c+empty][r-1] = 3;
               } else{
-                traps[c+empty][r-1] = 2;
+                traps[c+empty][r-1] = opponent;
               }
             }
           }
         }
         //check diagonalup
+        startp = board[c][r];
         if(r+3<y && c+3<x) {
           double count = 0;
           int empty = -1;
@@ -124,15 +127,15 @@ public final class Heuristic{
             } else if(startp == player && currentp == 0) {
               count+=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == 0) {
+            } else if(startp == opponent && currentp == 0) {
               count-=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == opponent(player)) {
+            } else if(startp == opponent && currentp == opponent) {
               count-=1;
             } else if(startp == 0 && currentp == player) {
               count+=1;
               startp = currentp;
-            } else if(startp == 0 && currentp == opponent(player)) {
+            } else if(startp == 0 && currentp == opponent) {
               count = -count;
               count-=1;
               startp = currentp;
@@ -144,31 +147,33 @@ public final class Heuristic{
               break;
             }
           }
-          if (count >= EMPTY_SPACE_VALUE*4 || count <= -EMPTY_SPACE_VALUE*4) {
+          
+          if (count > EMPTY_SPACE_VALUE*4 || count < -EMPTY_SPACE_VALUE*4) {
             sum += count;
           }
           if (DEBUG)
             System.err.println("Sum after diagonal up: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
             if(r+empty-1 >= 0 && board[c+empty][r+empty-1] == 0){
-              if(traps[c+empty][r+empty-1] == 2){
+              if(traps[c+empty][r+empty-1] == opponent){
                 traps[c+empty][r+empty-1] = 3;
               } else{
-                traps[c+empty][r+empty-1] = 1;
+                traps[c+empty][r+empty-1] = player;
               }
             }
           }
           if (count <= -3-EMPTY_SPACE_VALUE) {
             if(r+empty-1 >= 0 && board[c+empty][r+empty-1] == 0){
-              if(traps[c+empty][r+empty-1] == 1){
+              if(traps[c+empty][r+empty-1] == player){
                 traps[c+empty][r+empty-1] = 3;
               } else{
-                traps[c+empty][r+empty-1] = 3;
+                traps[c+empty][r+empty-1] = opponent;
               }
             }
           }
         }
         //check diagonaldown
+        startp = board[c][r];
         if(r-3>=0 && c+3<x) {
           double count = 0;
           int empty = -1;
@@ -179,15 +184,15 @@ public final class Heuristic{
             } else if(startp == player && currentp == 0) {
               count+=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == 0) {
+            } else if(startp == opponent && currentp == 0) {
               count-=EMPTY_SPACE_VALUE;
               empty = a;
-            } else if(startp == opponent(player) && currentp == opponent(player)) {
+            } else if(startp == opponent && currentp == opponent) {
               count-=1;
             } else if(startp == 0 && currentp == player) {
               count+=1;
               startp = currentp;
-            } else if(startp == 0 && currentp == opponent(player)) {
+            } else if(startp == 0 && currentp == opponent) {
               count = -count;
               count-=1;
               startp = currentp;
@@ -199,26 +204,26 @@ public final class Heuristic{
               break;
             }
           }
-          if (count >= EMPTY_SPACE_VALUE*4 || count <= -EMPTY_SPACE_VALUE*4) {
+          if (count > EMPTY_SPACE_VALUE*4 || count < -EMPTY_SPACE_VALUE*4) {
             sum += count;
           }
           if (DEBUG)
             System.err.println("Sum after diagonal down: " + sum);
           if (count >= 3+EMPTY_SPACE_VALUE) {
             if(r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0){
-              if(traps[c+empty][r-empty-1] == 2){
+              if(traps[c+empty][r-empty-1] == opponent){
                 traps[c+empty][r-empty-1] = 3;
               } else{
-                traps[c+empty][r-empty-1] = 1;
+                traps[c+empty][r-empty-1] = player;
               }
             }
           }
           if (count <= -3-EMPTY_SPACE_VALUE) {
             if(r-empty-1 >= 0 && board[c+empty][r-empty-1] == 0){
-              if(traps[c+empty][r-empty-1] == 1){
+              if(traps[c+empty][r-empty-1] == player){
                 traps[c+empty][r-empty-1] = 3;
               } else{
-                traps[c+empty][r-empty-1] = 2;
+                traps[c+empty][r-empty-1] = opponent;
               }
             }
           }
@@ -231,23 +236,31 @@ public final class Heuristic{
     for(int c = 0; c < x; c++){
       int countTraps = 0;
       for(int r = 0; r < y; r++){
-        if(traps[c][r] == 1){
+        if(traps[c][r] == player){
           if(countTraps == 0){
-            if(traps[c][r+1] == 1){
+            if(traps[c][r+1] == player){
               return 1000;
             }
-            sum += 500;
+            if(y-r%2 == 0){
+              sum += 500;
+            } else{
+              sum += 400;
+            }
             countTraps += 1;
           } else{
             sum += 50;
           }
         }
-        if(traps[c][r] == 2){
+        else if(traps[c][r] == opponent){
           if(countTraps == 0){
-            if(traps[c][r+1] == 2){
+            if(traps[c][r+1] == opponent){
               return -1000;
             }
-            sum -= 500;
+            if(y-r%2 == 0){
+              sum -= 500;
+            } else{
+              sum -= 400;
+            }
             countTraps += 1;
           } else{
             sum -= 50;
