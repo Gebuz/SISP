@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
-public class AlphaBetaLogic implements IGameLogic {
+public class Group3 implements IGameLogic {
   private int x = 0;
   private int y = 0;
   private int playerID;
@@ -18,10 +18,10 @@ public class AlphaBetaLogic implements IGameLogic {
   //time limit in milliseconds, used to time out the Future
   private int timeLimitInMs = 10000;
 
-  public AlphaBetaLogic() {}
+  public Group3() {}
 
-  //constructor for easily creating a copy of an AlphaBetaLogic object
-  public AlphaBetaLogic(AlphaBetaLogic other) {
+  //constructor for easily creating a copy of an Group3 object
+  public Group3(Group3 other) {
     this.x = other.x;
     this.y = other.y;
     this.playerID = other.playerID;
@@ -76,13 +76,13 @@ public class AlphaBetaLogic implements IGameLogic {
   }
 
   /*
-   * Creates a copy of AlphaBetaLogic object and runs iterativeDeepening on it
+   * Creates a copy of Group3 object and runs iterativeDeepening on it
    * If this is the first move, then just choose the center column, since it is the
    * best
   */
   @Override
   public int decideNextMove() {
-    AlphaBetaLogic copy = new AlphaBetaLogic(this);
+    Group3 copy = new Group3(this);
     if (copy.firstMove) {
       for (int column = 0; column < copy.board.length; column++) {
         if (copy.board[column][0] != 0) {
