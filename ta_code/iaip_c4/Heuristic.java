@@ -26,9 +26,14 @@ public final class Heuristic{
     int y = board[0].length;
     double sum = 0;
     int[][] traps = new int[x][y];
+    /**
+    Runs through all the possible winning combinations on the board. Saves any traps.
+    Values 1/4 in a row 2.5 points, 2/4 3 points, and 3/4 in a row 3.5 points.
+    The players own points are added, while opponents' are subtracted.
+    **/
     for(int c = 0; c < x; c++) {
       for(int r = 0; r < y; r++) {
-        //check vertical
+        //check vertical win combinations
         int startp = board[c][r];
         if (r+3<y) {
           double count = 0;
@@ -62,7 +67,7 @@ public final class Heuristic{
         }
         if (DEBUG)
           System.err.println("Sum after vertical: " + sum);
-        //check horizontal
+        //check horizontal win combinations
         startp = board[c][r];
         if(c+3<x) {
           double count = 0;
@@ -118,7 +123,7 @@ public final class Heuristic{
             }
           }
         }
-        //check diagonalup
+        //check diagonal up winning combinations
         startp = board[c][r];
         if(r+3<y && c+3<x) {
           double count = 0;
@@ -175,7 +180,7 @@ public final class Heuristic{
             }
           }
         }
-        //check diagonaldown
+        //check diagonal down winning combinations
         startp = board[c][r];
         if(r-3>=0 && c+3<x) {
           double count = 0;
@@ -235,7 +240,7 @@ public final class Heuristic{
     }
     if (DEBUG)
       System.err.println("Sum before traps: " + sum);
-    //check traps
+    //give traps values.
     for(int c = 0; c < x; c++){
       int countTraps = 0;
       for(int r = 0; r < y; r++){
