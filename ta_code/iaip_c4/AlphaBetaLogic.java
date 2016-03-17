@@ -19,7 +19,7 @@ public class AlphaBetaLogic implements IGameLogic {
   */
   private ExecutorService executor = Executors.newFixedThreadPool(3);
   private volatile int bestMove = -1;
-  private int timeLimitInMs = 500;
+  private int timeLimitInMs = 600;
 
   public AlphaBetaLogic() {
   }
@@ -91,11 +91,9 @@ public class AlphaBetaLogic implements IGameLogic {
     });
     try {
       runner.get(timeLimitInMs, TimeUnit.MILLISECONDS);
-      Heuristic.preCalculated.clear();
       return bestMove;
     } catch (Exception e) {
       runner.cancel(true);
-      Heuristic.preCalculated.clear();
       return bestMove;
     }
   }
