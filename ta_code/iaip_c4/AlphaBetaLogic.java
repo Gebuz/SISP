@@ -17,11 +17,27 @@ public class AlphaBetaLogic implements IGameLogic {
    * before the next computation is needed. By having enough threads
    * in the pool, we should avoid this issue
   */
-  private ExecutorService executor = Executors.newFixedThreadPool(3);
+  private ExecutorService executor = Executors.newFixedThreadPool(1);
   private volatile int bestMove = -1;
   private int timeLimitInMs = 600;
 
   public AlphaBetaLogic() {
+  }
+
+  public AlphaBetaLogic(AlphaBetaLogic other) {
+    this.x = other.x;
+    this.y = other.y;
+    this.playerID = other.playerID;
+    this.board = BasicLogic.copyOf(other.board);
+    assert(board != other.board);
+    this.cutoff = other.cutoff;
+    this.maxCutoff = other.maxCutoff;
+    this.bestMoves = new int[other.bestMoves.length];
+    for (int i = 0; i < this.bestMoves.length; i++)
+      this.bestMoves[i] = -1;
+    this.firstMove = other.firstMove;
+    this.bestMove = -1;
+    this.timeLimitInMs = other.timeLimitInMs;
   }
 
   public void initializeGame(int x, int y, int playerID) {
@@ -60,16 +76,17 @@ public class AlphaBetaLogic implements IGameLogic {
   }
 
   public int decideNextMove() {
-    if (firstMove) {
-      for (int column = 0; column < board.length; column++) {
-        if (board[column][0] != 0) {
-          firstMove = false;
-          return iterativeDeepening();
+    AlphaBetaLogic copy = new AlphaBetaLogic(this);
+    if (copy.firstMove) {
+      for (int column = 0; column < copy.board.length; column++) {
+        if (copy.board[column][0] != 0) {
+          copy.firstMove = false;
+          return copy.iterativeDeepening();
         }
       }
       return 3;
     } else {
-      return iterativeDeepening();
+      return copy.iterativeDeepening();
     }
   }
 
@@ -78,10 +95,11 @@ public class AlphaBetaLogic implements IGameLogic {
     Future<Integer> runner = executor.submit(new Callable<Integer>() {
       public Integer call() {
         for (int depth = cutoff; depth < maxCutoff; depth++) {
+          clearBestMoves();
+          System.err.println("Running depth " + depth);
+          int res = minMax(board, depth);
           if (!Thread.currentThread().isInterrupted())  {
-            clearBestMoves();
-            System.err.println("Running depth " + depth);
-            bestMove = minMax(board, depth);
+            setBestMove(res);
           } else {
             return -1;
           }
@@ -91,11 +109,18 @@ public class AlphaBetaLogic implements IGameLogic {
     });
     try {
       runner.get(timeLimitInMs, TimeUnit.MILLISECONDS);
-      return bestMove;
+      return getBestMove();
     } catch (Exception e) {
       runner.cancel(true);
-      return bestMove;
+      return getBestMove();
     }
+  }
+
+  private synchronized int getBestMove() {
+    return bestMove;
+  }
+  private synchronized void setBestMove(int move) {
+    this.bestMove = move;
   }
 
   private List<Integer> actions(int[][] state, int depth) {
