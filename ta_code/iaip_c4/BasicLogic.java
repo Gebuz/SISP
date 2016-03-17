@@ -1,5 +1,5 @@
 public class BasicLogic {
-  public BasicLogic() {}
+  private BasicLogic() {}
 
   public static IGameLogic.Winner getRealWinner(int id) {
     if (id == 1)
@@ -9,8 +9,6 @@ public class BasicLogic {
   }
 
   public static IGameLogic.Winner gameStatus(int[][] board) {
-    //TODO Write your implementation for this method
-    //columns
     for(int c = 0; c < board.length; c++) {
       for(int r = 0; r < board[c].length; r++) {
         int player = board[c][r];

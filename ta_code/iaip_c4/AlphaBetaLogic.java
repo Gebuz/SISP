@@ -7,23 +7,20 @@ public class AlphaBetaLogic implements IGameLogic {
   private int y = 0;
   private int playerID;
   private int[][] board;
+  //the starting depth
   private int cutoff = 8;
+  //the maximum depth to search
   private int maxCutoff = 30;
   private int[] bestMoves;
   private boolean firstMove = true;
-  /*
-   * This is kinda a hack. Since our runners only check if they are
-   * interrupted after doing a full depth search, we might not die
-   * before the next computation is needed. By having enough threads
-   * in the pool, we should avoid this issue
-  */
   private ExecutorService executor = Executors.newFixedThreadPool(1);
   private volatile int bestMove = -1;
-  private int timeLimitInMs = 600;
+  //time limit in milliseconds, used to time out the Future
+  private int timeLimitInMs = 10000;
 
-  public AlphaBetaLogic() {
-  }
+  public AlphaBetaLogic() {}
 
+  //constructor for easily creating a copy of an AlphaBetaLogic object
   public AlphaBetaLogic(AlphaBetaLogic other) {
     this.x = other.x;
     this.y = other.y;
@@ -40,6 +37,7 @@ public class AlphaBetaLogic implements IGameLogic {
     this.timeLimitInMs = other.timeLimitInMs;
   }
 
+  @Override
   public void initializeGame(int x, int y, int playerID) {
     this.x = x;
     this.y = y;
@@ -56,10 +54,12 @@ public class AlphaBetaLogic implements IGameLogic {
     this.playerID = playerID;
   }
 
+  @Override
   public Winner gameFinished() {
     return BasicLogic.gameStatus(board);
   }
 
+  @Override
   public void insertCoin(int column, int playerID) {
     act(board, column, playerID);
   }
@@ -75,6 +75,12 @@ public class AlphaBetaLogic implements IGameLogic {
     return state;
   }
 
+  /*
+   * Creates a copy of AlphaBetaLogic object and runs iterativeDeepening on it
+   * If this is the first move, then just choose the center column, since it is the
+   * best
+  */
+  @Override
   public int decideNextMove() {
     AlphaBetaLogic copy = new AlphaBetaLogic(this);
     if (copy.firstMove) {
@@ -89,7 +95,12 @@ public class AlphaBetaLogic implements IGameLogic {
       return copy.iterativeDeepening();
     }
   }
-
+  /*
+   * Will create a Future, which in turn will run minMax on increasing depths
+   * After each runthrough, the result is saved, so it can be used, in case the next
+   * iteration does not complete before the timeout
+   * The Future is cancelled either way and the last computed result returned
+  */
   private int iterativeDeepening() {
     bestMove = -1;
     Future<Integer> runner = executor.submit(new Callable<Integer>() {
@@ -109,6 +120,7 @@ public class AlphaBetaLogic implements IGameLogic {
     });
     try {
       runner.get(timeLimitInMs, TimeUnit.MILLISECONDS);
+      runner.cancel(true);
       return getBestMove();
     } catch (Exception e) {
       runner.cancel(true);
@@ -141,16 +153,12 @@ public class AlphaBetaLogic implements IGameLogic {
       bestMoves[i] = -1;
   }
 
-  private int minMax(int[][] state) {
-    return minMax(board, cutoff);
-  }
-
   private int minMax(int[][] state, int depth) {
     int bestAction = -1;
     double bestValue = -Double.MAX_VALUE;
     for (int action : actions(state, depth)) {
-      double res = min(act(BasicLogic.copyOf(state), action, playerID), -Double.MAX_VALUE, Double.MAX_VALUE, 1, depth);
-      //System.err.println(res);
+      double res = min(act(BasicLogic.copyOf(state), action, playerID), 
+          -Double.MAX_VALUE, Double.MAX_VALUE, 1, depth);
       if (res > bestValue) {
         bestValue = res;
         bestAction = action;
@@ -165,7 +173,8 @@ public class AlphaBetaLogic implements IGameLogic {
     else {
       double best = -Double.MAX_VALUE;
       for (int action : actions(state, depth)) {
-        double res = min(act(BasicLogic.copyOf(state), action, playerID), alpha, beta, depth+1, cutoff);
+        double res = min(act(BasicLogic.copyOf(state), action, playerID), 
+            alpha, beta, depth+1, cutoff);
         if (res >= beta) {
           bestMoves[depth] = action;
           return res;
@@ -187,7 +196,8 @@ public class AlphaBetaLogic implements IGameLogic {
     else {
       double best = Double.MAX_VALUE;
       for (int action : actions(state, depth)) {
-        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1), alpha, beta, depth+1, cutoff);
+        double res = max(act(BasicLogic.copyOf(state), action, playerID == 1 ? 2 : 1), 
+            alpha, beta, depth+1, cutoff);
         if (res <= alpha) {
           bestMoves[depth] = action;
           return res;
@@ -220,5 +230,4 @@ public class AlphaBetaLogic implements IGameLogic {
     }
     return Heuristic.GetHeuristic(state, playerID);
   }
-
 }
